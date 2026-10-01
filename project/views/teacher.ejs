@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h3>Navigation</h3>
+    <a href="/teacher">Dashboard</a>
+    <a href="#">Students</a>
+    <a href="#">Attendance</a>
+    <a href="/logout">Logout</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1 class="dashboard-title"><%= name %>'s Dashboard</h1> <!-- Teacher's name at the top -->
+
+    <header>
+      <div class="profile">
+        <div class="photo-container">
+          <img src="<%= photo || 'https://via.placeholder.com/150' %>" alt="Teacher Photo" class="photo">
+          <form id="uploadForm" action="/upload-teacher-photo" method="post" enctype="multipart/form-data">
+            <input type="file" name="photo" id="file-input" accept="image/*" onchange="updatePhoto()">
+          </form>
+          <label for="file-input" class="upload-btn">+</label>
+        </div>
+        <div class="info">
+          <h1 class="name"><%= name %></h1>
+          <p class="subject">Subject: <%= subject || 'Not Specified' %></p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mark Attendance Section -->
+    <div class="attendance-section" style="margin-bottom: 30px;">
+      <h2 class="section-title">Mark Attendance</h2>
+      <form id="attendanceForm" enctype="multipart/form-data" style="margin: 20px 0;">
+        <div style="margin-bottom: 15px;">
+          <label for="subject" style="display: block; margin-bottom: 5px; font-weight: bold;">Subject:</label>
+          <select name="subject" id="subject" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+            <option value="<%= subject || '' %>"><%= subject || 'Select Subject' %></option>
+            <option value="Digital Signal Processing">Digital Signal Processing</option>
+            <option value="Linear Integrated Circuits">Linear Integrated Circuits</option>
+            <option value="Principles of Control System">Principles of Control System</option>
+            <option value="Digital Communication">Digital Communication</option>
+          </select>
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label for="classroomImage" style="display: block; margin-bottom: 5px; font-weight: bold;">Upload Classroom Photo:</label>
+          <input type="file" name="classroomImage" id="classroomImage" accept="image/*" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+          <small style="color: #666; display: block; margin-top: 5px;">Upload a photo of the classroom to automatically mark attendance</small>
+        </div>
+        <button type="submit" class="btn" style="background-color: #63E8CB; padding: 12px 30px; font-size: 16px;">Mark Attendance</button>
+      </form>
+      <div id="attendanceMessage" style="margin-top: 15px; padding: 10px; border-radius: 5px; display: none;"></div>
+
+      <!-- Export CSV -->
+      <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+        <h3 class="section-title" style="margin-top: 0; margin-bottom: 15px;">Export Attendance CSV</h3>
+        <form action="/export-attendance" method="get" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <input type="hidden" name="subject" value="<%= subject || '' %>">
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <label style="display: flex; align-items: center; gap: 5px;">
+              <strong>From:</strong>
+              <input type="date" name="from" style="padding: 6px; border: 1px solid #ccc; border-radius: 5px;">
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+              <strong>To:</strong>
+              <input type="date" name="to" style="padding: 6px; border: 1px solid #ccc; border-radius: 5px;">
+            </label>
+            <button type="submit" class="btn" style="width: auto; padding: 10px 20px; background-color: #395886;">Export CSV</button>
+          </div>
+        </form>
+        <small style="color:#666; display: block; margin-top: 10px; line-height: 1.5;">
+          <strong>CSV Features:</strong><br>
+          • One column per lecture session (even if multiple lectures on same day)<br>
+          • Format: "DD/MM/YYYY" for single lecture, "DD/MM/YYYY (Session N)" for multiple same-day lectures<br>
+          • Shows 'P' for Present, 'AB' for Absent<br>
+          • Includes summary row with total attended per session<br>
+          • Exports all lectures for: <strong><%= subject || 'Selected Subject' %></strong>
+        </small>
+      </div>
+    </div>
+
+    <div class="attendance-section">
+      <h2 class="section-title">Students Attendance Record</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Branch</th>
+            <th>Digital Signal Processing</th>
+            <th>Linear Integrated Circuits</th>
+            <th>Principles of Control System</th>
+            <th>Digital Communication</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (students && students.length > 0) { %>
+            <% students.forEach(std => { %>
+              <tr>
+                <td><%= std.name %></td>
+                <td><%= std.branch %></td>
+                <td class="percentage"><%= std['Digital Signal Processing'] %>%</td>
+                <td class="percentage"><%= std['Linear Integrated Circuits'] %>%</td>
+                <td class="percentage"><%= std['Principles of Control System'] %>%</td>
+                <td class="percentage"><%= std['Digital Communication'] %>%</td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="6">No student data available</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Images Section -->
+    <div class="attendance-section" style="margin-top: 20px;">
+      <h2 class="section-title">Recent Attendance Detection Results (Your Uploads Only)</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 15px;">
+        <% if ((recentPreviews || []).length > 0) { %>
+          <% recentPreviews.forEach(item => { %>
+            <a href="<%= item.url %>" target="_blank" style="text-decoration:none;">
+              <div style="position: relative; border-radius:8px; overflow:hidden; border:2px solid #63E8CB; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <img src="<%= item.url %>" alt="Detection Result" style="width:100%; height:150px; object-fit:cover; display:block;">
+                <div style="position: absolute; bottom:0; left:0; right:0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding:8px; color:white; font-size:11px; text-align:center;">
+                  Date: <%= item.date %><br>
+                  <strong>Click to view full size</strong>
+                </div>
+              </div>
+            </a>
+          <% }) %>
+        <% } else { %>
+          <div style="grid-column: 1 / -1; text-align:center; padding:20px; color:#999;">
+            No detection results yet. Upload a classroom photo to see detection results with face boxes and date.
+          </div>
+        <% } %>
+      </div>
+      <small style="color:#666; display:block; margin-top:12px; padding:10px; background:#f0f8ff; border-radius:5px;">
+        <strong>Detection Results:</strong> Preview images show detected faces with bounding boxes (green = recognized, red = unknown), student names, similarity scores, and date watermark. Only your uploaded images' detection results are shown here.
+      </small>
+    </div>
+  </div>
+
+  <script>
+    function updatePhoto() {
+      document.getElementById('uploadForm').submit();
+    }
+
+    // Handle attendance form submission
+    document.getElementById('attendanceForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const messageDiv = document.getElementById('attendanceMessage');
+      const submitBtn = this.querySelector('button[type="submit"]');
+      
+      messageDiv.style.display = 'block';
+      messageDiv.style.backgroundColor = '#d4edda';
+      messageDiv.style.color = '#155724';
+      messageDiv.textContent = 'Processing attendance... Please wait.';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Processing...';
+      
+      try {
+        const response = await fetch('/mark-attendance', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          messageDiv.style.backgroundColor = '#d4edda';
+          messageDiv.style.color = '#155724';
+          messageDiv.innerHTML = `<strong>Success!</strong> ${data.message}<br>Present students: ${data.presentStudents.join(', ') || 'None'}`;
+          // Reload page after 2 seconds to show updated attendance
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          messageDiv.style.backgroundColor = '#f8d7da';
+          messageDiv.style.color = '#721c24';
+          messageDiv.innerHTML = `<strong>Error:</strong> ${data.message}`;
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Mark Attendance';
+        }
+      } catch (error) {
+        messageDiv.style.backgroundColor = '#f8d7da';
+        messageDiv.style.color = '#721c24';
+        messageDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Mark Attendance';
+      }
+    });
+  </script>
+</body>
+</html>

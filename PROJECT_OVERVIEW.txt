@@ -1,0 +1,112 @@
+PROJECT: Face-Recognition Attendance System + Web Portal
+
+1) High-level Architecture
+- Frontend: Express + EJS views (project/views), CSS/JS in project/public
+- Backend: Node.js (project/server.js) handles auth, sessions, uploads, CSV export, and DB updates
+- ML Pipeline: Python (attendance_system.py) using InsightFace for face detection/recognition
+- Database: MongoDB (local), collections Students and Teachers
+- Storage:
+  - roster/: known faces (one image per student; filename ≈ student name)
+  - attendance_images/: teachers’ uploaded classroom photos
+  - attendance_output/: preview_*.jpg with detection boxes and attendance_*.csv per run
+
+2) User Roles & Flows
+- Login (index.ejs): role-based -> Student or Teacher
+- Student (/student):
+  - Auto-assigns profile photo from roster if none set
+  - Sees per-subject attendance with attended/total/percent
+- Teacher (/teacher):
+  - Upload classroom photo; server calls Python; DB is updated for subject
+  - Sees detection result previews (boxes + names + date watermark) for OWN uploads only
+  - Export CSV for subject: one column per lecture session; multiple same-day lectures appear as Session 1/2/…
+
+3) Attendance Marking Pipeline (request -> result)
+- Teacher uploads classroom image -> project/server.js
+- Image saved as attendance_images/<TEACHERID>_<timestamp>_classroom.jpg
+- server.js executes Python:
+  python attendance_system.py --image <path> --roster_dir ./roster --out_dir ./attendance_output --rebuild-cache
+- attendance_system.py:
+  a) Builds/loads roster embeddings (rebuild-cache forces refresh to include new photos)
+  b) Detects faces, matches to roster (threshold 0.38), writes:
+     - attendance_<timestamp>.csv (names + boxes + scores)
+     - preview_<timestamp>.jpg (boxes + labels + date watermark)
+- server.js parses the CSV, computes presence list, and updates MongoDB:
+  - Students.attendance[subject]: attendedClasses/totalClasses/percent
+  - Students.attendanceHistory: {subject, date, present}
+
+4) Data Model (simplified)
+- Student { name, username, password, rollno, branch, profileImage,
+           attendance: [ {subject, percent, totalClasses, attendedClasses} ],
+           attendanceHistory: [ {subject, date, present} ] }
+- Teacher { name, username, password, subject, department, profileImage }
+
+5) CSV Export (/export-attendance)
+- Subject defaults to the logged-in teacher’s subject; optional from/to date filters
+- Output sheet:
+  - Columns: Roll No., Name, followed by one column per lecture session
+  - For dates having multiple sessions: headers like "DD/MM/YYYY (Session 1)", "(Session 2)"
+  - Cell values: P (present) / AB (absent) / blank (no record)
+  - A summary row at the bottom: TOTAL ATTENDED per session
+  - UTF-8 with BOM for Excel compatibility
+
+6) Teacher Image Visibility
+- Uploaded filenames include teacher ID prefix
+- Teacher dashboard only lists previews corresponding to the teacher’s uploads (time-correlation filter)
+
+7) Roster Photos & Matching
+- One front-facing photo per student in roster/
+- Filename should match name (full or at least first name) e.g., "Shashwat.jpg"
+- Embeddings cache file: roster_embeddings.json (auto-generated). Removing it will force a rebuild next run.
+
+8) How to Run
+- Requirements: Node.js, MongoDB, Python3, Python packages (opencv-python, numpy, insightface)
+- Install Node deps: cd project && npm install
+- Start site: npm start (server at http://localhost:3000)
+- Login with provided credentials (Students/Teachers in Database/*.json)
+
+9) Maintenance / Troubleshooting
+- If new roster photos are added: current flow forces rebuild (via --rebuild-cache) on each run
+- If detection misses faces: ensure good lighting, front faces, and correct names; preview shows boxes to verify
+- To reset cache: delete roster_embeddings.json
+- To stop services on Windows:
+  - Node: Ctrl+C or taskkill /F /IM node.exe
+  - MongoDB service: net stop MongoDB
+
+10) Security & Privacy Notes (basic)
+- Simple session cookie (HTTP only, not secure in dev). For production: enable HTTPS and secure cookies
+- Uploaded images stored on disk; preview images include face boxes and labels -> handle carefully if sharing externally
+
+11) Files to KEEP (core)
+- attendance_system.py
+- roster/ (student face photos)
+- attendance_images/ and attendance_output/
+- project/ (entire folder)
+- Database/DataBase.Students.json and Database/DataBase.Teachers.json
+
+12) Files you CAN DELETE (not used by the integrated system)
+- color-grayscale.py
+- compare_faces_vecotr.py
+- face_rec_and_detect.py
+- face_rec_and_detect_optionA.py
+- face_vector_compare.py
+- facerec2 cv2.py
+- haarcascade_face_rec.py
+- mtcnn_face_rec.py
+- img/ (misc static assets not used by site)
+- vid/ (e.g., hakla.mp4) if unrelated to demo
+- Loose test images in root (e.g., Larry.jpg, me.jpg) that are NOT in roster/
+- deploy.prototxt, res10_300x300_ssd_iter_140000.caffemodel (unused in current InsightFace pipeline)
+
+13) Optional to DELETE/REGENERATE
+- roster_embeddings.json (auto-generated; delete to force fresh embedding build)
+- attendance_output/* (old previews/CSVs) – only if you don’t need history
+
+14) Presentation Talking Points
+- Problem: Manual attendance is slow and error-prone
+- Solution: Photo-based automatic attendance using face recognition
+- Demo: Upload photo -> see preview with boxes -> attendance auto-updated -> export CSV with full lecture history
+- Tech: Node+Express, EJS, MongoDB, Python (InsightFace)
+- Strengths: Fast operation, human-verifiable previews, clean CSV exports, per-teacher isolation
+- Limitations: Needs good roster photos & reasonable lighting; accuracy depends on face angles/occlusion
+- Next Steps: Add manual correction UI, cloud storage, and role-based subject management
+

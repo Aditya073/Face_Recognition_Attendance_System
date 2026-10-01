@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "68c6bc1f1a02238ca92e22bd"
+  },
+  "name": "Dr.Ashish Vanmali",
+  "username": "ashish",
+  "password": "ashish123",
+  "subject": "Digital Signal Processing"
+},
+{
+  "_id": {
+    "$oid": "68c6bdd31a02238ca92e22be"
+  },
+  "name": "Ms.Sampada Pimpale",
+  "username": "sampada",
+  "password": "sampada123",
+  "subject": "Linear Integrated Circuits"
+},
+{
+  "_id": {
+    "$oid": "68c6bf3f1a02238ca92e22c0"
+  },
+  "name": "Mrs.Kaanchan Sarmmalkar",
+  "username": "kaanchan",
+  "password": "kaanchan123",
+  "subject": "Principles of Control System"
+},
+{
+  "_id": {
+    "$oid": "68c6bffd1a02238ca92e22c1"
+  },
+  "name": "Mrs.Bharati Gondhalekar",
+  "username": "bharati",
+  "password": "bharati123",
+  "subject": "Digital Communication"
+}]

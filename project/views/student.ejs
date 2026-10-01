@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header with Logout -->
+    <header>
+      <h2>Student Portal</h2>
+      <a href="/logout" class="logout">Logout</a>
+    </header>
+
+    <!-- Profile Section -->
+    <div class="profile">
+      <div class="photo-container">
+        <img src="<%= photo %>" alt="Student Photo" class="photo">
+        <form id="uploadForm" action="/upload-photo" method="post" enctype="multipart/form-data">
+          <input type="file" name="photo" id="file-input" accept="image/*" onchange="updatePhoto()">
+        </form>
+        <label for="file-input" class="upload-btn">+</label>
+      </div>
+      <div class="info">
+        <h1 class="name"><%= name %></h1>
+        <p class="branch"><%= branch %></p>
+      </div>
+    </div>
+
+    <!-- Attendance Section -->
+    <div class="attendance-section">
+      <h2 class="section-title">Attendance Record</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Attended</th>
+            <th>Total Classes</th>
+            <th>Attendance Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (attendance && attendance.length > 0) { %>
+            <% attendance.forEach(sub => { %>
+              <tr>
+                <td><%= sub.subject %></td>
+                <td><%= sub.attendedClasses || 0 %></td>
+                <td><%= sub.totalClasses || 0 %></td>
+                <td class="percentage"><%= sub.percent || 0 %>%</td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="4">No attendance data available</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="/js/script.js"></script>
+</body>
+</html>

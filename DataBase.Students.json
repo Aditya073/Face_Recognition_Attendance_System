@@ -1,0 +1,198 @@
+[{
+  "_id": {
+    "$oid": "68c59a1a1a02238ca92e229a"
+  },
+  "name": "Shashwat Abhale",
+  "username": "shashwat",
+  "password": "shashwat123",
+  "rollno": 1
+},
+{
+  "_id": {
+    "$oid": "68c59a951a02238ca92e229b"
+  },
+  "name": "Revan Agavaen",
+  "username": "revan",
+  "password": "revan123",
+  "rollno": 2
+},
+{
+  "_id": {
+    "$oid": "68c59c0b1a02238ca92e229d"
+  },
+  "name": "Zaid Alam",
+  "username": "zaid",
+  "password": "zaid123",
+  "rollno": 3
+},
+{
+  "_id": {
+    "$oid": "68c59c601a02238ca92e229e"
+  },
+  "name": "Khushwant Chouhan",
+  "username": "khushwant",
+  "password": "khushwant123",
+  "rollno": 4
+},
+{
+  "_id": {
+    "$oid": "68c59cc91a02238ca92e229f"
+  },
+  "name": "Harshita Desai",
+  "username": "harshita",
+  "password": "harshita123",
+  "rollno": 5
+},
+{
+  "_id": {
+    "$oid": "68c59d3a1a02238ca92e22a0"
+  },
+  "name": "Samith Devadiga",
+  "username": "samith",
+  "password": "samith123",
+  "rollno": 6
+},
+{
+  "_id": {
+    "$oid": "68c59d871a02238ca92e22a1"
+  },
+  "name": "Aditya Dixit",
+  "username": "adityaD",
+  "password": "adityaD123",
+  "rollno": 7
+},
+{
+  "_id": {
+    "$oid": "68c59e091a02238ca92e22a2"
+  },
+  "name": "Niraj Gawade",
+  "username": "niraj",
+  "password": "niraj123",
+  "rollno": 8
+},
+{
+  "_id": {
+    "$oid": "68c6aea91a02238ca92e22a3"
+  },
+  "name": "Siddhesh Ghadi",
+  "username": "siddhesh",
+  "password": "siddhesh123",
+  "rollno": 9
+},
+{
+  "_id": {
+    "$oid": "68c6afb41a02238ca92e22a4"
+  },
+  "name": "Soorya Guddemane",
+  "username": "soorya",
+  "password": "soorya123",
+  "rollno": 10
+},
+{
+  "_id": {
+    "$oid": "68c6b01c1a02238ca92e22a5"
+  },
+  "name": "Aditya Jha",
+  "username": "adityaJ",
+  "password": "adityaJ123",
+  "rollno": 11
+},
+{
+  "_id": {
+    "$oid": "68c6b0b71a02238ca92e22a6"
+  },
+  "name": "Preyansh Jumde",
+  "username": "preyansh",
+  "password": "preyansh123",
+  "rollno": 12
+},
+{
+  "_id": {
+    "$oid": "68c6b1311a02238ca92e22a7"
+  },
+  "name": "Om Khadye",
+  "username": "om",
+  "password": "om123",
+  "rollno": 13
+},
+{
+  "_id": {
+    "$oid": "68c6b1c21a02238ca92e22a8"
+  },
+  "name": "Bhakti Lambate",
+  "username": "bhakti",
+  "password": "bhakti123",
+  "rollno": 14
+},
+{
+  "_id": {
+    "$oid": "68c6b2051a02238ca92e22a9"
+  },
+  "name": "Vikas Lekule",
+  "username": "vikas",
+  "password": "vikas123",
+  "rollno": 15
+},
+{
+  "_id": {
+    "$oid": "68c6b2351a02238ca92e22aa"
+  },
+  "name": "Ansh Panchal",
+  "username": "ansh",
+  "password": "ansh123",
+  "rollno": 16
+},
+{
+  "_id": {
+    "$oid": "68c6b25f1a02238ca92e22ab"
+  },
+  "name": "Aditya Pande",
+  "username": "adityaP",
+  "password": "adityaP123",
+  "rollno": 17
+},
+{
+  "_id": {
+    "$oid": "68c6b2901a02238ca92e22ac"
+  },
+  "name": "Krish Patel",
+  "username": "krish",
+  "password": "krish123",
+  "rollno": 18
+},
+{
+  "_id": {
+    "$oid": "68c6b2c71a02238ca92e22ad"
+  },
+  "name": "Manasi Pote",
+  "username": "manasi",
+  "password": "manasi123",
+  "rollno": 19
+},
+{
+  "_id": {
+    "$oid": "68c6b30d1a02238ca92e22ae"
+  },
+  "name": "Aryan Rane",
+  "username": "aryan",
+  "password": "aryan123",
+  "rollno": 20
+},
+{
+  "_id": {
+    "$oid": "68c6b3501a02238ca92e22af"
+  },
+  "name": "Vanshika Singh",
+  "username": "vanshika",
+  "password": "vanshika123",
+  "rollno": 21
+},
+{
+  "_id": {
+    "$oid": "68c6b3de1a02238ca92e22b0"
+  },
+  "name": "Aachal Yadav",
+  "username": "aachal",
+  "password": "aachal123",
+  "rollno": 22
+}]
