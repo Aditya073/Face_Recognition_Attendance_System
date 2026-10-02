@@ -9,56 +9,58 @@
 <body>
   <div class="container">
     <!-- Header with Logout -->
-    <header>
+    <header class="topbar">
       <h2>Student Portal</h2>
       <a href="/logout" class="logout">Logout</a>
     </header>
 
     <!-- Profile Section -->
-    <div class="profile">
+    <section class="card profile-card">
       <div class="photo-container">
-        <img src="<%= photo %>" alt="Student Photo" class="photo">
+        <img src="<%= photo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj48cmVjdCB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI0Q1REVFRiIvPjxjaXJjbGUgY3g9Ijc1IiBjeT0iNTgiIHI9IjI2IiBmaWxsPSIjOEFBRUUwIi8+PHBhdGggZD0iTTI0IDE1MGMwLTMwIDIyLTUwIDUxLTUwczUxIDIwIDUxIDUweiIgZmlsbD0iIzhBQUVFMCIvPjwvc3ZnPg==' %>" alt="Student Photo" class="photo">
         <form id="uploadForm" action="/upload-photo" method="post" enctype="multipart/form-data">
           <input type="file" name="photo" id="file-input" accept="image/*" onchange="updatePhoto()">
         </form>
-        <label for="file-input" class="upload-btn">+</label>
+        <label for="file-input" class="upload-btn" title="Change photo" aria-label="Change photo">+</label>
       </div>
       <div class="info">
         <h1 class="name"><%= name %></h1>
         <p class="branch"><%= branch %></p>
       </div>
-    </div>
+    </section>
 
     <!-- Attendance Section -->
-    <div class="attendance-section">
+    <section class="card">
       <h2 class="section-title">Attendance Record</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Subject</th>
-            <th>Attended</th>
-            <th>Total Classes</th>
-            <th>Attendance Percentage</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (attendance && attendance.length > 0) { %>
-            <% attendance.forEach(sub => { %>
-              <tr>
-                <td><%= sub.subject %></td>
-                <td><%= sub.attendedClasses || 0 %></td>
-                <td><%= sub.totalClasses || 0 %></td>
-                <td class="percentage"><%= sub.percent || 0 %>%</td>
-              </tr>
-            <% }) %>
-          <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
             <tr>
-              <td colspan="4">No attendance data available</td>
+              <th>Subject</th>
+              <th class="num">Attended</th>
+              <th class="num">Total Classes</th>
+              <th class="num">Attendance Percentage</th>
             </tr>
-          <% } %>
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            <% if (attendance && attendance.length > 0) { %>
+              <% attendance.forEach(sub => { %>
+                <tr>
+                  <td><%= sub.subject %></td>
+                  <td class="num"><%= sub.attendedClasses || 0 %></td>
+                  <td class="num"><%= sub.totalClasses || 0 %></td>
+                  <td class="num"><span class="percentage"><%= sub.percent || 0 %>%</span></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="4" class="empty">No attendance data available</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </section>
   </div>
   <script src="/js/script.js"></script>
 </body>

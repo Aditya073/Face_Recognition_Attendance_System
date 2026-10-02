@@ -8,146 +8,148 @@
 </head>
 <body>
   <!-- Sidebar -->
-  <div class="sidebar">
+  <nav class="sidebar">
     <h3>Navigation</h3>
-    <a href="/teacher">Dashboard</a>
+    <a href="/teacher" class="active">Dashboard</a>
     <a href="#">Students</a>
     <a href="#">Attendance</a>
-    <a href="/logout">Logout</a>
-  </div>
+    <a href="/logout" class="sidebar-logout">Logout</a>
+  </nav>
 
   <!-- Main Content -->
-  <div class="main-content">
+  <main class="main-content">
     <h1 class="dashboard-title"><%= name %>'s Dashboard</h1> <!-- Teacher's name at the top -->
 
-    <header>
-      <div class="profile">
-        <div class="photo-container">
-          <img src="<%= photo || 'https://via.placeholder.com/150' %>" alt="Teacher Photo" class="photo">
-          <form id="uploadForm" action="/upload-teacher-photo" method="post" enctype="multipart/form-data">
-            <input type="file" name="photo" id="file-input" accept="image/*" onchange="updatePhoto()">
-          </form>
-          <label for="file-input" class="upload-btn">+</label>
-        </div>
-        <div class="info">
-          <h1 class="name"><%= name %></h1>
-          <p class="subject">Subject: <%= subject || 'Not Specified' %></p>
-        </div>
+    <section class="card profile-card">
+      <div class="photo-container">
+        <img src="<%= photo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj48cmVjdCB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI0Q1REVFRiIvPjxjaXJjbGUgY3g9Ijc1IiBjeT0iNTgiIHI9IjI2IiBmaWxsPSIjOEFBRUUwIi8+PHBhdGggZD0iTTI0IDE1MGMwLTMwIDIyLTUwIDUxLTUwczUxIDIwIDUxIDUweiIgZmlsbD0iIzhBQUVFMCIvPjwvc3ZnPg==' %>" alt="Teacher Photo" class="photo">
+        <form id="uploadForm" action="/upload-teacher-photo" method="post" enctype="multipart/form-data">
+          <input type="file" name="photo" id="file-input" accept="image/*" onchange="updatePhoto()">
+        </form>
+        <label for="file-input" class="upload-btn" title="Change photo" aria-label="Change photo">+</label>
       </div>
-    </header>
+      <div class="info">
+        <h1 class="name"><%= name %></h1>
+        <p class="subject">Subject: <%= subject || 'Not Specified' %></p>
+      </div>
+    </section>
 
     <!-- Mark Attendance Section -->
-    <div class="attendance-section" style="margin-bottom: 30px;">
+    <section class="card">
       <h2 class="section-title">Mark Attendance</h2>
-      <form id="attendanceForm" enctype="multipart/form-data" style="margin: 20px 0;">
-        <div style="margin-bottom: 15px;">
-          <label for="subject" style="display: block; margin-bottom: 5px; font-weight: bold;">Subject:</label>
-          <select name="subject" id="subject" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-            <option value="<%= subject || '' %>"><%= subject || 'Select Subject' %></option>
-            <option value="Digital Signal Processing">Digital Signal Processing</option>
-            <option value="Linear Integrated Circuits">Linear Integrated Circuits</option>
-            <option value="Principles of Control System">Principles of Control System</option>
-            <option value="Digital Communication">Digital Communication</option>
-          </select>
+      <form id="attendanceForm" enctype="multipart/form-data">
+        <div class="form-grid">
+          <div class="field">
+            <label for="subject">Subject</label>
+            <select name="subject" id="subject" required>
+              <option value="<%= subject || '' %>"><%= subject || 'Select Subject' %></option>
+              <option value="Digital Signal Processing">Digital Signal Processing</option>
+              <option value="Linear Integrated Circuits">Linear Integrated Circuits</option>
+              <option value="Principles of Control System">Principles of Control System</option>
+              <option value="Digital Communication">Digital Communication</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="classroomImage">Upload Classroom Photo</label>
+            <input type="file" name="classroomImage" id="classroomImage" accept="image/*" required>
+            <small class="hint">Upload a photo of the classroom to automatically mark attendance</small>
+          </div>
         </div>
-        <div style="margin-bottom: 15px;">
-          <label for="classroomImage" style="display: block; margin-bottom: 5px; font-weight: bold;">Upload Classroom Photo:</label>
-          <input type="file" name="classroomImage" id="classroomImage" accept="image/*" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-          <small style="color: #666; display: block; margin-top: 5px;">Upload a photo of the classroom to automatically mark attendance</small>
-        </div>
-        <button type="submit" class="btn" style="background-color: #63E8CB; padding: 12px 30px; font-size: 16px;">Mark Attendance</button>
+        <button type="submit" class="btn">Mark Attendance</button>
       </form>
-      <div id="attendanceMessage" style="margin-top: 15px; padding: 10px; border-radius: 5px; display: none;"></div>
+      <div id="attendanceMessage" class="message" role="status"></div>
 
       <!-- Export CSV -->
-      <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-        <h3 class="section-title" style="margin-top: 0; margin-bottom: 15px;">Export Attendance CSV</h3>
-        <form action="/export-attendance" method="get" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <div class="export-box">
+        <h3 class="section-title">Export Attendance CSV</h3>
+        <form action="/export-attendance" method="get">
           <input type="hidden" name="subject" value="<%= subject || '' %>">
-          <div style="display: flex; gap: 10px; align-items: center;">
-            <label style="display: flex; align-items: center; gap: 5px;">
-              <strong>From:</strong>
-              <input type="date" name="from" style="padding: 6px; border: 1px solid #ccc; border-radius: 5px;">
-            </label>
-            <label style="display: flex; align-items: center; gap: 5px;">
-              <strong>To:</strong>
-              <input type="date" name="to" style="padding: 6px; border: 1px solid #ccc; border-radius: 5px;">
-            </label>
-            <button type="submit" class="btn" style="width: auto; padding: 10px 20px; background-color: #395886;">Export CSV</button>
+          <div class="date-row">
+            <div class="field">
+              <label for="from">From</label>
+              <input type="date" name="from" id="from">
+            </div>
+            <div class="field">
+              <label for="to">To</label>
+              <input type="date" name="to" id="to">
+            </div>
+            <button type="submit" class="btn btn-secondary">Export CSV</button>
           </div>
         </form>
-        <small style="color:#666; display: block; margin-top: 10px; line-height: 1.5;">
-          <strong>CSV Features:</strong><br>
-          • One column per lecture session (even if multiple lectures on same day)<br>
-          • Format: "DD/MM/YYYY" for single lecture, "DD/MM/YYYY (Session N)" for multiple same-day lectures<br>
-          • Shows 'P' for Present, 'AB' for Absent<br>
-          • Includes summary row with total attended per session<br>
-          • Exports all lectures for: <strong><%= subject || 'Selected Subject' %></strong>
-        </small>
+        <details class="details">
+          <summary>CSV details</summary>
+          <ul>
+            <li>One column per lecture session (even if multiple lectures on same day)</li>
+            <li>Format: "DD/MM/YYYY" for single lecture, "DD/MM/YYYY (Session N)" for multiple same-day lectures</li>
+            <li>Shows 'P' for Present, 'AB' for Absent</li>
+            <li>Includes summary row with total attended per session</li>
+            <li>Exports all lectures for: <strong><%= subject || 'Selected Subject' %></strong></li>
+          </ul>
+        </details>
       </div>
-    </div>
+    </section>
 
-    <div class="attendance-section">
+    <section class="card">
       <h2 class="section-title">Students Attendance Record</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Student Name</th>
-            <th>Branch</th>
-            <th>Digital Signal Processing</th>
-            <th>Linear Integrated Circuits</th>
-            <th>Principles of Control System</th>
-            <th>Digital Communication</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if (students && students.length > 0) { %>
-            <% students.forEach(std => { %>
-              <tr>
-                <td><%= std.name %></td>
-                <td><%= std.branch %></td>
-                <td class="percentage"><%= std['Digital Signal Processing'] %>%</td>
-                <td class="percentage"><%= std['Linear Integrated Circuits'] %>%</td>
-                <td class="percentage"><%= std['Principles of Control System'] %>%</td>
-                <td class="percentage"><%= std['Digital Communication'] %>%</td>
-              </tr>
-            <% }) %>
-          <% } else { %>
+      <div class="table-wrap table-wide">
+        <table>
+          <thead>
             <tr>
-              <td colspan="6">No student data available</td>
+              <th>Student Name</th>
+              <th>Branch</th>
+              <th class="num">Digital Signal Processing</th>
+              <th class="num">Linear Integrated Circuits</th>
+              <th class="num">Principles of Control System</th>
+              <th class="num">Digital Communication</th>
             </tr>
-          <% } %>
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            <% if (students && students.length > 0) { %>
+              <% students.forEach(std => { %>
+                <tr>
+                  <td><%= std.name %></td>
+                  <td><%= std.branch %></td>
+                  <td class="num"><span class="percentage"><%= std['Digital Signal Processing'] %>%</span></td>
+                  <td class="num"><span class="percentage"><%= std['Linear Integrated Circuits'] %>%</span></td>
+                  <td class="num"><span class="percentage"><%= std['Principles of Control System'] %>%</span></td>
+                  <td class="num"><span class="percentage"><%= std['Digital Communication'] %>%</span></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="6" class="empty">No student data available</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <!-- Images Section -->
-    <div class="attendance-section" style="margin-top: 20px;">
+    <section class="card">
       <h2 class="section-title">Recent Attendance Detection Results (Your Uploads Only)</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 15px;">
+      <div class="preview-grid">
         <% if ((recentPreviews || []).length > 0) { %>
           <% recentPreviews.forEach(item => { %>
-            <a href="<%= item.url %>" target="_blank" style="text-decoration:none;">
-              <div style="position: relative; border-radius:8px; overflow:hidden; border:2px solid #63E8CB; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <img src="<%= item.url %>" alt="Detection Result" style="width:100%; height:150px; object-fit:cover; display:block;">
-                <div style="position: absolute; bottom:0; left:0; right:0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent); padding:8px; color:white; font-size:11px; text-align:center;">
-                  Date: <%= item.date %><br>
-                  <strong>Click to view full size</strong>
-                </div>
+            <a href="<%= item.url %>" target="_blank" rel="noopener" class="preview-card">
+              <img src="<%= item.url %>" alt="Detection Result">
+              <div class="preview-caption">
+                Date: <%= item.date %><br>
+                <strong>Click to view full size</strong>
               </div>
             </a>
           <% }) %>
         <% } else { %>
-          <div style="grid-column: 1 / -1; text-align:center; padding:20px; color:#999;">
+          <div class="empty-state">
             No detection results yet. Upload a classroom photo to see detection results with face boxes and date.
           </div>
         <% } %>
       </div>
-      <small style="color:#666; display:block; margin-top:12px; padding:10px; background:#f0f8ff; border-radius:5px;">
+      <p class="note">
         <strong>Detection Results:</strong> Preview images show detected faces with bounding boxes (green = recognized, red = unknown), student names, similarity scores, and date watermark. Only your uploaded images' detection results are shown here.
-      </small>
-    </div>
-  </div>
+      </p>
+    </section>
+  </main>
 
   <script>
     function updatePhoto() {

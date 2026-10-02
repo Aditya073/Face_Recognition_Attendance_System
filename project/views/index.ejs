@@ -11,20 +11,26 @@
     <div class="login-card">
       <h1>Welcome 👋</h1>
       <form action="/login" method="POST">
-        <label for="username">Username</label>
-        <input type="text" name="username" placeholder="Enter username" required>
-        <label for="password">Password</label>
-        <input type="password" name="password" placeholder="Enter password" required>
-        <label for="role">Select Role</label>
-        <select name="role" required>
-          <option value="" disabled selected>-- Select --</option>
-          <option value="student">Student</option>
-          <option value="teacher">Teacher</option>
-        </select>
-        <button type="submit" class="btn">Login</button>
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" placeholder="Enter username" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" placeholder="Enter password" autocomplete="current-password" required>
+        </div>
+        <div class="field">
+          <label for="role">Select Role</label>
+          <select name="role" id="role" required>
+            <option value="" disabled selected>-- Select --</option>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+          </select>
+        </div>
         <% if (errorMessage) { %>
-          <div class="alert"><%= errorMessage %></div>
+          <div class="alert" role="alert"><%= errorMessage %></div>
         <% } %>
+        <button type="submit" class="btn btn-block">Login</button>
       </form>
     </div>
   </div>
